@@ -1,0 +1,4 @@
+# 海燕党 DID:web 解析服务 依赖
+# 政党名称：海燕党 | 英文名称：PETREL AI PARTY | 创始人：刘海燕（LIU HAIYAN）
+fastapi>=0.104.0
+uvicorn>=0.24.0
