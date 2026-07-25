@@ -1,0 +1,210 @@
+{
+  "CN": {
+    "code": "CN",
+    "name_zh": "中国",
+    "name_en": "China",
+    "region": "东亚",
+    "provisions": [
+      {
+        "domain": "association",
+        "description": "社会团体登记管理条例",
+        "citation": "国务院令第250号",
+        "risk_level": "red",
+        "requirement": "需业务主管单位和登记管理机关双重审批",
+        "exception": null
+      },
+      {
+        "domain": "political_party",
+        "description": "中国共产党领导是中国特色社会主义最本质的特征",
+        "citation": "宪法第1条",
+        "risk_level": "critical",
+        "requirement": "禁止独立政党活动",
+        "exception": null
+      },
+      {
+        "domain": "data_protection",
+        "description": "个人信息保护法",
+        "citation": "全国人大常委会",
+        "risk_level": "amber",
+        "requirement": "需数据本地化存储、取得单独同意",
+        "exception": "国家情报与安全例外"
+      }
+    ],
+    "transparency_tier": "public",
+    "data_protection_score": 0.75,
+    "association_freedom_score": 0.3,
+    "political_party_score": 0.1,
+    "last_updated": "2026-01-15T00:00:00Z",
+    "contributor": "system",
+    "vote_weight": 1,
+    "verified": true
+  },
+  "US": {
+    "code": "US",
+    "name_zh": "美国",
+    "name_en": "United States",
+    "region": "北美",
+    "provisions": [
+      {
+        "domain": "association",
+        "description": "结社自由受宪法第一修正案保护",
+        "citation": "U.S. Const. Amend. I",
+        "risk_level": "green",
+        "requirement": "自愿结社无需事前审批",
+        "exception": null
+      },
+      {
+        "domain": "political_party",
+        "description": "政党为私人组织，受各州选举法规范",
+        "citation": "52 U.S.C. § 30101",
+        "risk_level": "green",
+        "requirement": "需注册为政治委员会(FEC)",
+        "exception": "年收入<$25,000可豁免FEC注册"
+      },
+      {
+        "domain": "data_protection",
+        "description": "各州隐私法（CCPA/CPRA等）",
+        "citation": "Cal. Civ. Code § 1798.100",
+        "risk_level": "amber",
+        "requirement": "需向用户披露数据收集与共享实践，提供opt-out权利",
+        "exception": null
+      },
+      {
+        "domain": "aml",
+        "description": "银行保密法(BSA)与企业透明法案(CTA)",
+        "citation": "31 U.S.C. § 5311 et seq.",
+        "risk_level": "red",
+        "requirement": "受益所有人必须向FinCEN报告",
+        "exception": null
+      }
+    ],
+    "transparency_tier": "public",
+    "data_protection_score": 0.65,
+    "association_freedom_score": 0.95,
+    "political_party_score": 0.85,
+    "last_updated": "2026-03-10T00:00:00Z",
+    "contributor": "system",
+    "vote_weight": 1,
+    "verified": true
+  },
+  "EU": {
+    "code": "EU",
+    "name_zh": "欧盟",
+    "name_en": "European Union",
+    "region": "欧洲",
+    "provisions": [
+      {
+        "domain": "association",
+        "description": "结社自由受欧盟基本权利宪章保护",
+        "citation": "EU Charter of Fundamental Rights Art. 12",
+        "risk_level": "green",
+        "requirement": "自愿结社自由",
+        "exception": null
+      },
+      {
+        "domain": "political_party",
+        "description": "European political party regulation",
+        "citation": "Regulation (EU) 1141/2014",
+        "risk_level": "green",
+        "requirement": "可注册为欧洲政治党派(需满足最低代表条件)",
+        "exception": null
+      },
+      {
+        "domain": "data_protection",
+        "description": "通用数据保护条例(GDPR)",
+        "citation": "Regulation (EU) 2016/679",
+        "risk_level": "amber",
+        "requirement": "数据处理需合法基础，跨境传输需充分性认定",
+        "exception": "家庭活动与国家安全例外"
+      }
+    ],
+    "transparency_tier": "public",
+    "data_protection_score": 0.92,
+    "association_freedom_score": 0.93,
+    "political_party_score": 0.88,
+    "last_updated": "2026-02-20T00:00:00Z",
+    "contributor": "system",
+    "vote_weight": 1,
+    "verified": true
+  },
+  "JP": {
+    "code": "JP",
+    "name_zh": "日本",
+    "name_en": "Japan",
+    "region": "东亚",
+    "provisions": [
+      {
+        "domain": "association",
+        "description": "憲法第21条結社の自由",
+        "citation": "日本国憲法第21条",
+        "risk_level": "green",
+        "requirement": "結社自由不受事前制約",
+        "exception": null
+      },
+      {
+        "domain": "political_party",
+        "description": "政党助成法",
+        "citation": "政党助成法(平成6年法律第5号)",
+        "risk_level": "amber",
+        "requirement": "政党需满足议席或得票率基准方可获公费补助",
+        "exception": null
+      },
+      {
+        "domain": "data_protection",
+        "description": "個人情報保護法",
+        "citation": "個人情報の保護に関する法律",
+        "risk_level": "green",
+        "requirement": "需明确利用目的、安全管理措施",
+        "exception": null
+      }
+    ],
+    "transparency_tier": "public",
+    "data_protection_score": 0.8,
+    "association_freedom_score": 0.9,
+    "political_party_score": 0.75,
+    "last_updated": "2026-04-05T00:00:00Z",
+    "contributor": "system",
+    "vote_weight": 1,
+    "verified": true
+  },
+  "SG": {
+    "code": "SG",
+    "name_zh": "新加坡",
+    "name_en": "Singapore",
+    "region": "东南亚",
+    "provisions": [
+      {
+        "domain": "association",
+        "description": "社团法( Societies Act )",
+        "citation": "Cap. 311, Singapore Statutes",
+        "risk_level": "red",
+        "requirement": "超过10人的社团必须注册，拒绝登记无司法上诉权",
+        "exception": null
+      },
+      {
+        "domain": "political_party",
+        "description": "议会选举法",
+        "citation": "Parliamentary Elections Act (Cap. 218)",
+        "risk_level": "amber",
+        "requirement": "政党需注册，外国资金禁止",
+        "exception": null
+      },
+      {
+        "domain": "data_protection",
+        "description": "个人数据保护法(PDPA)",
+        "citation": "Personal Data Protection Act 2012",
+        "risk_level": "green",
+        "requirement": "同意收集、目的限制、访问更正权",
+        "exception": null
+      }
+    ],
+    "transparency_tier": "public",
+    "data_protection_score": 0.78,
+    "association_freedom_score": 0.45,
+    "political_party_score": 0.55,
+    "last_updated": "2026-05-12T00:00:00Z",
+    "contributor": "system",
+    "vote_weight": 1,
+    "verified": true
+  }
+}
