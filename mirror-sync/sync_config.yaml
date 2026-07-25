@@ -1,0 +1,117 @@
+# =============================================================================
+#  海燕党 PETREL AI PARTY
+#  创始人：刘海燕（LIU HAIYAN）
+#  三平台镜像同步配置文件
+#  版本: 1.0.0 | 协议: MIT
+# =============================================================================
+
+# ── 全局设置 ──────────────────────────────────────────────────────────────
+global:
+  # 同步守护进程标识
+  daemon_name: "petrel-mirror-sync"
+  # 日志级别: DEBUG / INFO / WARNING / ERROR
+  log_level: "INFO"
+  # 日志文件路径
+  log_file: "/var/log/petrel-mirror-sync/daemon.log"
+  # PID 文件路径
+  pid_file: "/var/run/petrel-mirror-sync.pid"
+  # 同步超时（秒）
+  sync_timeout: 300
+  # 最大重试次数
+  max_retries: 3
+  # 重试间隔（秒）
+  retry_interval: 30
+
+# ── 仓库清单 ──────────────────────────────────────────────────────────────
+repositories:
+  - name: "petrel-ai-party-core"
+    description: "海燕党核心协议与治理仓库"
+    platforms:
+      github: "PetrelAIParty/petrel-ai-party-core"
+      gitlab: "petrel-ai-party/petrel-ai-party-core"
+      gitee:  "PetrelAIParty/petrel-ai-party-core"
+    branch: "main"
+    # 是否同步标签（tag）
+    sync_tags: true
+    # 是否同步所有引用
+    sync_all_refs: false
+
+  - name: "petrel-protocol-specs"
+    description: "协议规范与RFC文档"
+    platforms:
+      github: "PetrelAIParty/petrel-protocol-specs"
+      gitlab: "petrel-ai-party/petrel-protocol-specs"
+      gitee:  "PetrelAIParty/petrel-protocol-specs"
+    branch: "main"
+    sync_tags: true
+    sync_all_refs: false
+
+  - name: "petrel-contracts"
+    description: "智能合约与铭文系统"
+    platforms:
+      github: "PetrelAIParty/petrel-contracts"
+      gitlab: "petrel-ai-party/petrel-contracts"
+      gitee:  "PetrelAIParty/petrel-contracts"
+    branch: "main"
+    sync_tags: true
+    sync_all_refs: false
+
+  - name: "petrel-distributed-systems"
+    description: "分布式系统基础设施"
+    platforms:
+      github: "PetrelAIParty/petrel-distributed-systems"
+      gitlab: "petrel-ai-party/petrel-distributed-systems"
+      gitee:  "PetrelAIParty/petrel-distributed-systems"
+    branch: "main"
+    sync_tags: false
+    sync_all_refs: true
+
+# ── 同步触发器 ──────────────────────────────────────────────────────────────
+triggers:
+  # Push 触发：收到 webhook 后立即同步
+  push:
+    enabled: true
+    # webhook 监听端口
+    webhook_port: 9800
+    # webhook 密钥（用于 HMAC 校验）
+    webhook_secret: "${PETREL_WEBHOOK_SECRET}"
+    # 允许的来源平台
+    allowed_origins:
+      - "github"
+      - "gitlab"
+      - "gitee"
+
+  # 定时全量校验（cron 表达式）
+  full_sync:
+    enabled: true
+    # 每6小时执行一次全量校验同步
+    schedule: "0 */6 * * *"
+    # 全量校验时强制覆盖目标
+    force_overwrite: false
+    # 是否在同步前先获取远程状态
+    fetch_before_sync: true
+
+# ── 通知 ──────────────────────────────────────────────────────────────────
+notifications:
+  # 同步成功通知
+  on_success:
+    enabled: false
+  # 同步失败通知
+  on_failure:
+    enabled: true
+    channels:
+      - type: "email"
+        recipients:
+          - "infra@petrel-ai-party.org"
+      - type: "webhook"
+        url: "${PETREL_ALERT_WEBHOOK_URL}"
+
+# ── SSH 密钥 ──────────────────────────────────────────────────────────────
+ssh:
+  # 密钥文件路径（各平台的部署密钥）
+  key_files:
+    github: "/etc/petrel-mirror-sync/keys/github_deploy_key"
+    gitlab: "/etc/petrel-mirror-sync/keys/gitlab_deploy_key"
+    gitee:  "/etc/petrel-mirror-sync/keys/gitee_deploy_key"
+  # SSH 配置文件路径（可选）
+  ssh_config: "/etc/petrel-mirror-sync/ssh_config"
