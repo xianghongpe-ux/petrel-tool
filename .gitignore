@@ -1,0 +1,6 @@
+# 海燕党 · 05-tool 仓库 .gitignore
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipfs/
