@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!--
+  =============================================================================
+   海燕党 PETREL AI PARTY
+   创始人：刘海燕（LIU HAIYAN）
+   可验证存在性证明页模板
+   版本: 1.0.0 | 协议: MIT
+  =============================================================================
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海燕党 · 存在性证明 · {SNAPSHOT_ID}</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --fg: #e0e0e0;
+            --accent: #00d4aa;
+            --border: #2a2a3a;
+            --highlight: #1a1a2e;
+            --muted: #888;
+            --danger: #ff4757;
+            --warning: #ffa502;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Noto Sans SC', monospace;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        .container { max-width: 960px; margin: 0 auto; }
+
+        /* ── Header ── */
+        .header {
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+        }
+        .header .sub {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        .badge-warn {
+            background: var(--warning);
+            color: #000;
+        }
+
+        /* ── Sections ── */
+        .section {
+            background: var(--highlight);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .section h2 {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .section h3 {
+            font-size: 1.0rem;
+            color: var(--accent);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Table ── */
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        th { color: var(--accent); font-weight: normal; }
+
+        /* ── Code ── */
+        code {
+            background: #111;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+        pre {
+            background: #000;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        .cid { font-size: 0.75rem; }
+
+        /* ── Status ── */
+        .status-ok {
+            display: inline-block;
+            background: var(--accent);
+            color: #000;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .status-pending {
+            display: inline-block;
+            background: var(--warning);
+            color: #000;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+        }
+
+        /* ── Verification Box ── */
+        .verification-box {
+            background: #0d1b1a;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        .verification-box code { display: block; }
+
+        /* ── Timeline ── */
+        .timeline { position: relative; padding-left: 2rem; }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+        .timeline-item {
+            position: relative;
+            padding: 0.75rem 0 0.75rem 1rem;
+            border-left: 2px solid var(--accent);
+            margin-left: -2px;
+        }
+        .timeline-item::before {
+            content: '◆';
+            position: absolute;
+            left: -0.7rem;
+            color: var(--accent);
+            font-size: 0.6rem;
+        }
+        .timeline-item .date {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* ── Stamp ── */
+        .stamp { text-align: center; margin: 2rem 0; }
+        .stamp svg { width: 80px; height: 80px; }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            th, td { font-size: 0.75rem; padding: 0.5rem 0.3rem; }
+        }
+
+        /* ── Print ── */
+        @media print {
+            body { background: #fff; color: #000; padding: 0; }
+            .section { background: #f5f5f5; border-color: #ccc; }
+            code { background: #eee; }
+            .header h1 { color: #000; }
+            .badge { background: #000; color: #fff; }
+            .verification-box { background: #f0f7f5; border-color: #000; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ── Header ── -->
+    <div class="header">
+        <h1>🔗 海燕党 · 存在性证明</h1>
+        <div class="sub">
+            <span class="badge">PETREL AI PARTY</span>
+            <span class="badge badge-warn">不可篡改</span>
+            快照 ID: <strong>{SNAPSHOT_ID}</strong>
+        </div>
+        <div class="sub">
+            生成时间: {GENERATED_AT}<br>
+            创始人：<strong>刘海燕（LIU HAIYAN）</strong>
+        </div>
+    </div>
+
+    <!-- ── 声明 ── -->
+    <div class="section">
+        <h2>📜 存在性声明</h2>
+        <p>
+            本证明文件由海燕党（PETREL AI PARTY）自动生成。
+            以下快照清单中的每个仓库均已打包为不可变归档，上传至
+            <strong>IPFS（星际文件系统）</strong>，
+            并将内容标识符（CID）写入区块链进行永久锚定。
+        </p>
+        <p style="margin-top: 0.5rem;">
+            任何第三方均可通过下方的验证步骤独立验证此快照的完整性和真实性。
+        </p>
+    </div>
+
+    <!-- ── 仓库快照清单 ── -->
+    <div class="section">
+        <h2>📋 快照仓库清单</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>仓库名称</th>
+                    <th>Commit</th>
+                    <th>归档 CID</th>
+                    <th>SHA-256</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                {REPOSITORY_ROWS}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── 全局清单 ── -->
+    <div class="section">
+        <h2>📦 全局清单</h2>
+
+        <h3>快照清单 CID</h3>
+        <pre>ipfs cat {MANIFEST_CID}</pre>
+
+        <h3>聚合归档 CID</h3>
+        <pre>ipfs cat {GLOBAL_CID}</pre>
+
+        <h3>SHA-256 指纹</h3>
+        <pre>{MANIFEST_SHA256}</pre>
+    </div>
+
+    <!-- ── 链上锚定 ── -->
+    <div class="section">
+        <h2>⛓️ 链上锚定记录</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>交易哈希 / ID</th>
+                    <th>时间</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ethereum</td>
+                    <td><code>{ETH_TX_HASH}</code></td>
+                    <td>{ETH_TIMESTAMP}</td>
+                    <td><span class="status-ok">锚定</span></td>
+                </tr>
+                <tr>
+                    <td>铭文</td>
+                    <td><code>{INSCRIPTION_TXID}</code></td>
+                    <td>{INSCRIPTION_TIMESTAMP}</td>
+                    <td><span class="status-ok">铭刻</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── 时间线 ── -->
+    <div class="section">
+        <h2>🕐 快照时间线</h2>
+        <div class="timeline">
+            {TIMELINE_ITEMS}
+        </div>
+    </div>
+
+    <!-- ── 验证 ── -->
+    <div class="section verification-box">
+        <h2>✅ 独立验证指南</h2>
+        <p>您可以通过以下任意方式独立验证此快照的真实性与完整性：</p>
+
+        <h3>方法一：IPFS 直连验证</h3>
+        <p>安装 IPFS 后执行：</p>
+        <pre># 获取快照清单
+ipfs cat {MANIFEST_CID}
+
+# 获取全局归档
+ipfs cat {GLOBAL_CID} > snapshot-{SNAPSHOT_ID}.tar.gz
+tar -xzf snapshot-{SNAPSHOT_ID}.tar.gz
+ls -la</pre>
+
+        <h3>方法二：SHA-256 校验</h3>
+        <p>下载各仓库归档后校验：</p>
+        <pre># 校验每个归档的完整性
+sha256sum *.tar.gz
+
+# 比对上方表格中的 SHA-256 值</pre>
+
+        <h3>方法三：链上查询</h3>
+        <p>在区块链浏览器中查询锚定交易：</p>
+        <pre>合约地址: {CONTRACT_ADDRESS}
+交易哈希: {ETH_TX_HASH}
+
+# 查询 SnapshotAnchored 事件
+cast logs --rpc-url {ETH_RPC_URL} \
+  --address {CONTRACT_ADDRESS} \
+  --event 'SnapshotAnchored(bytes32,string)'</pre>
+
+        <h3>方法四：离线验证（空气间隙环境）</h3>
+        <pre># 在隔离环境中重建校验
+echo "{MANIFEST_SHA256}  manifest-{SNAPSHOT_ID}.json" | sha256sum --check</pre>
+    </div>
+
+    <!-- ── Seal ── -->
+    <div class="stamp">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer ring -->
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#00d4aa" stroke-width="2"/>
+            <!-- Inner ring -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#00d4aa" stroke-width="0.5" stroke-dasharray="4 4"/>
+            <!-- Cross lines -->
+            <line x1="12" y1="50" x2="88" y2="50" stroke="#00d4aa" stroke-width="0.3" opacity="0.4"/>
+            <line x1="50" y1="12" x2="50" y2="88" stroke="#00d4aa" stroke-width="0.3" opacity="0.4"/>
+            <!-- Center mark -->
+            <circle cx="50" cy="50" r="3" fill="#00d4aa"/>
+            <!-- Text -->
+            <text x="50" y="55" text-anchor="middle" fill="#00d4aa"
+                  font-size="10" font-family="monospace" font-weight="bold">PAP</text>
+        </svg>
+        <p style="margin-top: 0.5rem; color: var(--accent); font-size: 0.85rem;">
+            ✦ 不可篡改 · 永久存证 ✦
+        </p>
+    </div>
+
+    <!-- ── Footer ── -->
+    <div class="footer">
+        <p>
+            <strong>海燕党</strong> PETREL AI PARTY
+        </p>
+        <p>
+            创始人：刘海燕（LIU HAIYAN）
+        </p>
+        <p>
+            本证明由 IPFS 快照流水线自动生成
+        </p>
+        <p>
+            协议：MIT ｜ 快照 ID：{SNAPSHOT_ID}
+        </p>
+    </div>
+
+</div>
+</body>
+</html>
