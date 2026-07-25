@@ -308,6 +308,7 @@ def main():
         epilog="海燕党最高原则：AI只献策不决策，人类终审。全部代码开源。",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+    parser.add_argument("--token", help="API Token 认证")
     sub = parser.add_subparsers(dest="cmd")
 
     # init
@@ -394,6 +395,10 @@ def main():
     if not args.cmd:
         parser.print_help()
         return
+
+    # 如果提供了 --token，设置环境变量供 require_auth 装饰器使用
+    if args.token:
+        os.environ["PETREL_CLI_TOKEN"] = args.token
 
     cmd_map = {
         "init": cmd_init,

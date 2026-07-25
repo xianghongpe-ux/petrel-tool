@@ -12,8 +12,43 @@
 import json
 import sys
 import os
+import functools
 from datetime import datetime, date
 from typing import Optional
+
+# ══════════════════════════════════════════
+#  安全认证
+# ══════════════════════════════════════════
+
+API_TOKEN = os.environ.get("PETREL_API_TOKEN", "")
+
+def require_auth(func):
+    """API Token 认证装饰器。当 PETREL_API_TOKEN 配置后，所有 API 调用必须提供匹配的 Token。"""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if API_TOKEN:
+            # 从 kwargs 或环境变量获取请求 Token
+            token = kwargs.pop('_token', None) or os.environ.get("PETREL_CLI_TOKEN", "")
+            if token != API_TOKEN:
+                return {"error": "unauthorized", "message": "需要API Token认证"}
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def mask_email(email: str) -> str:
+    """脱敏邮箱：a***@*.com"""
+    if not email or "@" not in email:
+        return email or ""
+    name, domain = email.split("@", 1)
+    if not name:
+        return email
+    masked_name = name[0] + "***"
+    parts = domain.split(".")
+    if len(parts) >= 2:
+        masked_domain = "*." + ".".join(parts[1:])
+    else:
+        masked_domain = domain
+    return f"{masked_name}@{masked_domain}"
 
 # 添加同级目录到路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -30,6 +65,7 @@ from member_db import (
 #  资格初审 (AI 自动)
 # ══════════════════════════════════════════
 
+@require_auth
 def ai_initial_screening(app_id: int) -> dict:
     """
     AI资格初审：基于入党动机、技能特长、贡献承诺进行自动评分。
@@ -137,6 +173,7 @@ def ai_initial_screening(app_id: int) -> dict:
     return opinion
 
 
+@require_auth
 def human_review(app_id: int, verdict: str, notes: str = "") -> dict:
     """
     人类委员会终审。verdict: approved | rejected
@@ -216,6 +253,7 @@ def run_evaluation(app_id: int) -> dict:
     return report
 
 
+@require_auth
 def committee_promote(app_id: int, votes: dict, notes: str = "") -> dict:
     """
     人类委员会转正投票。AI只献策不决策。
@@ -252,6 +290,7 @@ def committee_promote(app_id: int, votes: dict, notes: str = "") -> dict:
 #  退党处理
 # ══════════════════════════════════════════
 
+@require_auth
 def handle_dismiss(app_id: int, reason: str) -> dict:
     """退党处理"""
     app = get_application(app_id)
@@ -270,12 +309,14 @@ def handle_dismiss(app_id: int, reason: str) -> dict:
 #  查询统计
 # ══════════════════════════════════════════
 
+@require_auth
 def show_stats() -> dict:
     return get_stats()
 
 
+@require_auth
 def list_members(status: Optional[str] = None, limit: int = 50, offset: int = 0) -> list:
-    """列出成员（含评估摘要）"""
+    """列出成员（含评估摘要）—— PII字段已脱敏"""
     apps = list_applications(status, limit, offset)
     result = []
     for app in apps:
@@ -287,8 +328,7 @@ def list_members(status: Optional[str] = None, limit: int = 50, offset: int = 0)
             "id": app["id"],
             "uuid": app["uuid"],
             "name": app["name"],
-            "email": app["email"],
-            "github_id": app.get("github_id", ""),
+            "email": mask_email(app.get("email", "")),
             "status": app["status"],
             "created_at": app["created_at"],
             "last_score": last_eval["total_score"] if last_eval else None,
