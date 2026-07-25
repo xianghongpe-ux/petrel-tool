@@ -207,6 +207,7 @@ EXTENSION_COMMENT_MAP: Dict[str, Dict[str, str]] = {
 SKIP_DIRECTORIES = {
     ".git",
     "__pycache__",
+    ".pytest_cache",
     "node_modules",
     ".venv",
     "venv",

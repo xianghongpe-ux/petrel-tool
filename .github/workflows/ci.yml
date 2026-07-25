@@ -1,4 +1,4 @@
-name: 铭文守卫 CI
+name: CI — Petrel Tool 创世完整性检查
 
 on:
   push:
@@ -8,39 +8,20 @@ on:
 
 jobs:
   genesis-guard:
-    name: 🔱 创世铭文检查
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: 检查创世铭文
-        run: |
-          MISSING=0
-          GENESIS_MARKS=("海燕党" "PETREL AI PARTY" "刘海燕")
-          for file in $(find . -type f -name "*.py" -o -name "*.md" -o -name "*.html" -o -name "*.json" -o -name "*.yaml" -o -name "*.yml" -o -name "*.toml" | grep -v node_modules | grep -v __pycache__ | grep -v ".git" | head -100); do
-            for mark in "${GENESIS_MARKS[@]}"; do
-              if ! grep -q "$mark" "$file"; then
-                MISSING=$((MISSING + 1))
-                echo "❌ $file 缺少: $mark"
-              fi
-            done
-          done
-          if [ $MISSING -gt 0 ]; then
-            echo "::error::创世铭文检查失败！$MISSING 处缺失"
-            exit 1
-          fi
-          echo "✅ 全部文件通过创世铭文检查"
 
-  python-lint:
-    name: 🐍 Python 语法检查
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 检查Python语法
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 运行创世铭文完整性检查
         run: |
-          ERRORS=0
-          for f in $(find . -name "*.py" -not -path "./.git/*" -not -path "*/__pycache__/*"); do
-            python3 -m py_compile "$f" 2>/dev/null || {
-              echo "❌ $f 语法错误"; ERRORS=$((ERRORS+1))
-            }
-          done
-          [ $ERRORS -eq 0 ] && echo "✅ 全部Python文件语法正确" || exit 1
+          python ci-cd/genesis-guard.py --ci
+
+      - name: 代码结构检查
+        run: |
+          python ci-cd/genesis-guard.py --path . --ci
