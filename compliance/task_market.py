@@ -568,3 +568,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# 政党名称：海燕党 | 英文名称：PETREL AI PARTY | 创始人：刘海燕（LIU HAIYAN）
