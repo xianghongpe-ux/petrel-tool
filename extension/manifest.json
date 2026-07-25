@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "海燕党 · PETREL AI PARTY — DID 身份插件",
+  "version": "1.0.0",
+  "description": "一键创建海燕党(PETREL AI PARTY)去中心化数字身份(DID)，查看入党状态，链接到官网。创世铭文：海燕党/PETREL AI PARTY/刘海燕",
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "海燕党 · DID 身份插件",
+    "default_icon": "icon.svg"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://petrel.ai/*",
+    "https://api.petrel.ai/*"
+  ],
+  "homepage_url": "https://petrel.ai",
+  "author": "海燕党 · PETREL AI PARTY"
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>海燕党 · DID 身份</title>
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --primary: #1a73e8;
+      --primary-dark: #0d47a1;
+      --bg: #0f1a2e;
+      --card-bg: #1a2744;
+      --text: #e8edf5;
+      --text-muted: #8899bb;
+      --border: #2a3f6a;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --error: #ef4444;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      width: 380px;
+      min-height: 480px;
+    }
+    .container { padding: 20px; }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .header .logo { width: 48px; height: 48px; margin-bottom: 8px; }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .header .genesis { font-size: 10px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .card h2 { font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .card .label { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+    .card .value { font-size: 13px; word-break: break-all; }
+
+    /* ── Status Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge.pending  { background: #fbbf2433; color: var(--warning); border: 1px solid #fbbf2466; }
+    .badge.active   { background: #34d39933; color: var(--success); border: 1px solid #34d39966; }
+    .badge.inactive { background: #ef444433; color: var(--error);   border: 1px solid #ef444466; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    /* ── Footer ── */
+    .footer { text-align: center; margin-top: 8px; }
+    .footer a {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .footer a:hover { color: var(--primary); }
+
+    /* ── Loading ── */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Hidden ── */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <!-- Header -->
+    <div class="header">
+      <img src="icon.svg" alt="海燕党" class="logo" />
+      <h1>海燕党 · PETREL AI PARTY</h1>
+      <div class="subtitle">去中心化数字身份 (DID)</div>
+      <div class="genesis">创世铭文: 海燕党 / PETREL AI PARTY / 刘海燕</div>
+    </div>
+
+    <!-- 加载中 -->
+    <div id="loading-view" class="card" style="text-align:center;padding:32px;">
+      <div class="spinner" style="margin:0 auto 12px;"></div>
+      <div style="color:var(--text-muted);font-size:13px;">加载中...</div>
+    </div>
+
+    <!-- 未创建 DID -->
+    <div id="no-did-view" class="hidden">
+      <div class="card" style="text-align:center;padding:24px;">
+        <div style="font-size:40px;margin-bottom:12px;">🪪</div>
+        <h2 style="margin-bottom:6px;">尚未创建 DID</h2>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">
+          点击下方按钮创建您的海燕党去中心化数字身份
+        </p>
+        <button class="btn btn-primary" id="btn-create-did">🪪 创建我的 DID</button>
+        <div id="create-progress" class="hidden" style="margin-top:12px;font-size:12px;color:var(--text-muted);">
+          <span class="spinner" style="vertical-align:middle;margin-right:6px;"></span> 创建中...
+        </div>
+        <div id="create-error" class="hidden" style="margin-top:8px;font-size:12px;color:var(--error);"></div>
+      </div>
+    </div>
+
+    <!-- 已有 DID -->
+    <div id="has-did-view" class="hidden">
+      <!-- DID 信息卡 -->
+      <div class="card">
+        <h2>🆔 DID 身份</h2>
+        <div class="label">DID 地址</div>
+        <div class="value" id="did-address">—</div>
+        <div style="margin-top:8px;">
+          <span class="badge active">已激活</span>
+          <span style="margin-left:8px;font-size:12px;color:var(--text-muted);">入党状态</span>
+        </div>
+      </div>
+
+      <!-- 入党信息 -->
+      <div class="card">
+        <h2>📋 入党信息</h2>
+        <div class="label">昵称</div>
+        <div class="value" id="did-name">—</div>
+        <div class="label" style="margin-top:6px;">入党时间</div>
+        <div class="value" id="did-joined">—</div>
+        <div class="label" style="margin-top:6px;">链上声誉</div>
+        <div class="value" id="did-reputation">—</div>
+      </div>
+
+      <!-- 操作 -->
+      <button class="btn btn-outline" id="btn-refresh">🔄 刷新状态</button>
+      <button class="btn btn-primary" id="btn-goto-web" style="margin-top:8px;">🌐 打开官网</button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <a href="https://petrel.ai" target="_blank">https://petrel.ai</a>
+      &nbsp;·&nbsp;
+      <a href="#" id="btn-clear">清除本地数据</a>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
