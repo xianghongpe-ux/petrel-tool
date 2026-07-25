@@ -1,0 +1,7 @@
+# 海燕党 · DZN 分布式AI网络 Python 依赖
+aiohttp>=3.9.0
+numpy>=1.24.0
+psutil>=5.9.0
+py-cpuinfo>=9.0.0
+sentence-transformers>=2.2.0
+scikit-learn>=1.3.0

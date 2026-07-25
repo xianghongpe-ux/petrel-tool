@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海燕党 · DZN 任务市场</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+       background: #0a0e1a; color: #c8d6e5; line-height:1.6; }
+.container { max-width:1000px; margin:0 auto; padding:20px; }
+header { text-align:center; padding:40px 0 30px; border-bottom:1px solid #1a2340; }
+h1 { color:#e8d44d; font-size:2em; letter-spacing:4px; }
+.subtitle { color:#5a7a9a; font-size:0.9em; margin-top:8px; }
+.genesis { color:#3a5a7a; font-size:0.8em; margin-top:4px; font-style:italic; }
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:30px 0; }
+.stat-card { background:#111827; border:1px solid #1e293b; border-radius:12px; padding:20px; text-align:center; }
+.stat-card .num { font-size:2em; font-weight:bold; color:#e8d44d; }
+.stat-card .label { font-size:0.8em; color:#64748b; margin-top:4px; }
+.task-list { background:#111827; border:1px solid #1e293b; border-radius:12px; padding:20px; }
+.task-list h2 { color:#e8d44d; font-size:1.1em; margin-bottom:16px; }
+.task-item { display:flex; justify-content:space-between; align-items:center;
+             padding:12px 0; border-bottom:1px solid #1e293b; }
+.task-item:last-child { border-bottom:none; }
+.task-id { font-size:0.8em; color:#64748b; }
+.task-model { color:#60a5fa; font-size:0.85em; }
+.task-status { padding:3px 10px; border-radius:20px; font-size:0.75em; }
+.status-pending { background:#1e3a5f; color:#60a5fa; }
+.status-running { background:#1e4a2a; color:#4ade80; }
+.status-done { background:#2a1e4a; color:#a78bfa; }
+footer { text-align:center; padding:40px 0; color:#3a5a7a; font-size:0.8em; }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>⚡ DZN 任务市场</h1>
+  <p class="subtitle">海燕党 · 分布式AI推理网络</p>
+  <p class="genesis">"天下兴亡，匹夫有责。算力虽微，众志可城。"</p>
+</header>
+
+<div class="stats">
+  <div class="stat-card"><div class="num" id="totalTasks">0</div><div class="label">总任务</div></div>
+  <div class="stat-card"><div class="num" id="activeNodes">0</div><div class="label">活跃节点</div></div>
+  <div class="stat-card"><div class="num" id="completedToday">0</div><div class="label">今日完成</div></div>
+  <div class="stat-card"><div class="num" id="avgConfidence">--</div><div class="label">平均置信度</div></div>
+</div>
+
+<div class="task-list">
+  <h2>📋 最近任务</h2>
+  <div id="tasks"></div>
+</div>
+
+<footer>
+  <p>PETREL AI PARTY · DZN Distributed Network v1.0</p>
+  <p>开源协议: 海燕专属许可</p>
+</footer>
+</div>
+
+<script>
+// 演示数据
+const demoData = {
+  total: 128, nodes: 12, completed: 47, confidence: 0.87,
+  tasks: [
+    { id: "t-0x3a1f", model: "llama-3-8b", status: "done", time: "2min前" },
+    { id: "t-0x7b2e", model: "qwen-2-7b", status: "running", time: "30s前" },
+    { id: "t-0x9c4d", model: "deepseek-v3", status: "pending", time: "刚刚" },
+    { id: "t-0x5e8a", model: "llama-3-8b", status: "done", time: "5min前" },
+  ]
+};
+
+document.getElementById('totalTasks').textContent = demoData.total;
+document.getElementById('activeNodes').textContent = demoData.nodes;
+document.getElementById('completedToday').textContent = demoData.completed;
+document.getElementById('avgConfidence').textContent = (demoData.confidence * 100).toFixed(0) + '%';
+
+const tasksDiv = document.getElementById('tasks');
+demoData.tasks.forEach(t => {
+  const item = document.createElement('div');
+  item.className = 'task-item';
+  const cls = t.status === 'done' ? 'status-done' : t.status === 'running' ? 'status-running' : 'status-pending';
+  const label = t.status === 'done' ? '已完成' : t.status === 'running' ? '运行中' : '等待中';
+  item.innerHTML = `
+    <div>
+      <span class="task-id">${t.id}</span>
+      <span class="task-model">${t.model}</span>
+    </div>
+    <div>
+      <span class="task-status ${cls}">${label}</span>
+      <span style="color:#64748b;font-size:0.8em;margin-left:8px">${t.time}</span>
+    </div>`;
+  tasksDiv.appendChild(item);
+});
+</script>
+</body>
+</html>

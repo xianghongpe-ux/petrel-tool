@@ -1,0 +1,144 @@
+# 海燕党 · DZN 分布式AI网络 — 一键部署包
+# ======================================================
+# 创世铭文: 天下兴亡，匹夫有责。算力虽微，众志可城。
+# Docker Compose — 通信网关 + 投票客户端 + 任务市场前端 + 社区健康度看板
+# ======================================================
+
+version: "3.9"
+
+x-common-vars: &common-vars
+  DZN_GENESIS: "天下兴亡，匹夫有责。算力虽微，众志可城。"
+  DZN_LOG_LEVEL: "${DZN_LOG_LEVEL:-info}"
+  TZ: "${TZ:-UTC}"
+
+services:
+
+  # ── 通信网关 ────────────────────────────────────────
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: gateway
+    container_name: dzn-gateway
+    ports:
+      - "${DZN_GATEWAY_PORT:-8765}:8765"
+    environment:
+      <<: *common-vars
+      DZN_SERVICE: gateway
+      DZN_BOOTSTRAP_PEERS: "${DZN_BOOTSTRAP_PEERS:-}"
+      DZN_GATEWAY_PORT: 8765
+    volumes:
+      - dzn_data:/data
+    networks:
+      - dzn-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/p2p/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── 投票客户端 ──────────────────────────────────────
+  voting:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: voting
+    container_name: dzn-voting
+    ports:
+      - "${DZN_VOTING_PORT:-9101}:9101"
+    environment:
+      <<: *common-vars
+      DZN_SERVICE: voting
+      DZN_GATEWAY_URL: "http://gateway:8765"
+      DZN_VOTING_PORT: 9101
+      DZN_VOTING_MIN_SIGNATURES: "${DZN_VOTING_MIN_SIGNATURES:-3}"
+    depends_on:
+      gateway:
+        condition: service_healthy
+    networks:
+      - dzn-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9101/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── 任务市场前端 ────────────────────────────────────
+  market:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: market
+    container_name: dzn-market
+    ports:
+      - "${DZN_MARKET_PORT:-9102}:9102"
+    environment:
+      <<: *common-vars
+      DZN_SERVICE: market
+      DZN_GATEWAY_URL: "http://gateway:8765"
+      DZN_MARKET_PORT: 9102
+    depends_on:
+      gateway:
+        condition: service_healthy
+    networks:
+      - dzn-net
+    restart: unless-stopped
+
+  # ── 社区健康度看板 ──────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dashboard
+    container_name: dzn-dashboard
+    ports:
+      - "${DZN_DASHBOARD_PORT:-9103}:9103"
+    environment:
+      <<: *common-vars
+      DZN_SERVICE: dashboard
+      DZN_GATEWAY_URL: "http://gateway:8765"
+      DZN_DASHBOARD_PORT: 9103
+      DZN_DASHBOARD_REFRESH: "${DZN_DASHBOARD_REFRESH:-30}"
+    depends_on:
+      gateway:
+        condition: service_healthy
+      voting:
+        condition: service_started
+    networks:
+      - dzn-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9103/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── Nginx 反向代理 ──────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: dzn-nginx
+    ports:
+      - "${DZN_NGINX_PORT:-80}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - gateway
+      - voting
+      - market
+      - dashboard
+    networks:
+      - dzn-net
+    restart: unless-stopped
+
+networks:
+  dzn-net:
+    driver: bridge
+
+volumes:
+  dzn_data:
+    driver: local
